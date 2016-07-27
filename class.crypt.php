@@ -2,14 +2,14 @@
 
 class Crypt
 {
-  private static $private;
+  private $private;
 
   function __construct ( $private_key )
   {
-    self::$private = $private_key;
+    $this->private = $private_key;
   }
 
-  private static function CryptFunction ( $data )
+  private function CryptFunction ( $data )
   {
     $array = [];
 
@@ -24,30 +24,30 @@ class Crypt
 
   public function _crypt ( $data )
   {
-    self::$private = md5(self::$private);
-    $size = strlen(md5(self::$private));
+    $this->private = md5($this->private);
+    $size = strlen(md5($this->private));
     $point = $size/2;
 
     if( is_int($point) )
     {
-      $st = mb_substr(self::$private, 0, $point, 'utf-8');
-      $nd = mb_substr(self::$private, $point, $size, 'utf-8');
+      $st = mb_substr($this->private, 0, $point, 'utf-8');
+      $nd = mb_substr($this->private, $point, $size, 'utf-8');
     }
     else
     {
-      $st = mb_substr(self::$private, 0, $point-0.5, 'utf-8');
-      $nd = mb_substr(self::$private, 0, $point+0.5, 'utf-8');
+      $st = mb_substr($this->private, 0, $point-0.5, 'utf-8');
+      $nd = mb_substr($this->private, 0, $point+0.5, 'utf-8');
     }
-    return self::CryptFunction(strrev(base64_encode($st.htmlentities($data).$nd)));
+    return $this->CryptFunction(strrev(base64_encode($st.htmlentities($data).$nd)));
   }
 
   public function _decrypt ( $data )
   {
-    self::$private = md5(self::$private);
-    $size = strlen(self::$private);
+    $this->private = md5($this->private);
+    $size = strlen($this->private);
     $point = $size/2;
 
-    $result = base64_decode(strrev(self::CryptFunction($data)));
+    $result = base64_decode(strrev($this->CryptFunction($data)));
     if( is_int($point) )
     {
       $result = substr($result, $point);
@@ -63,18 +63,18 @@ class Crypt
 
   public function password ($password)
   {
-    $size = strlen(self::$private);
+    $size = strlen($this->private);
     $point = $size/2;
 
     if( is_int($point) )
     {
-      $st = mb_substr(self::$private, 0, $point, 'utf-8');
-      $nd = mb_substr(self::$private, $point, $size, 'utf-8');
+      $st = mb_substr($this->private, 0, $point, 'utf-8');
+      $nd = mb_substr($this->private, $point, $size, 'utf-8');
     }
     else
     {
-      $st = mb_substr(self::$private, 0, $point-0.5, 'utf-8');
-      $nd = mb_substr(self::$private, 0, $point+0.5, 'utf-8');
+      $st = mb_substr($this->private, 0, $point-0.5, 'utf-8');
+      $nd = mb_substr($this->private, 0, $point+0.5, 'utf-8');
     }
     return md5(sha1($st.htmlentities($password).$nd));
   }
