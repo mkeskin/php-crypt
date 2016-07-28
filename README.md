@@ -2,7 +2,7 @@
 
 How to using:
 
-**Calling to class**
+**Calling class**
 ```
 $crypt = new Crypt;
 ```
